@@ -7,8 +7,8 @@
   --bg-elevated: #181818;
 
   /* Accent */
-  --accent: #E85D4F;
-  --accent-hover: #f06b5e;
+  --accent: #22D3EE;
+  --accent-hover: #38BDF8;
 
   /* Text hierarchy */
   --text-primary: #F5F5F5;
@@ -95,32 +95,47 @@ body {
 
 /* Glass Card */
 .glass-card {
-  background: var(--white-45);
-  border: 1px solid var(--white-8);
+  /* Matte surface (no frosted glass / no blur) */
+  background-color: rgba(14, 14, 16, 0.985);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 24px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  transition: all 300ms var(--ease-out);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 24px 80px rgba(0, 0, 0, 0.55);
+  transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
 }
 
 .glass-card:hover {
-  background: var(--white-6);
-  border-color: var(--white-10);
+  transform: translateY(-1px);
+  background-color: rgba(18, 18, 20, 0.99);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 /* Glass Card - Elevated */
 .glass-card-elevated {
-  background: rgba(28, 28, 30, 0.88);
-  border: 1px solid var(--white-8);
+  /* Elevated matte surface */
+  background-color: rgba(16, 16, 18, 0.992);
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 24px;
-  backdrop-filter: blur(80px) saturate(180%);
-  -webkit-backdrop-filter: blur(80px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 34px 120px rgba(0, 0, 0, 0.65);
 }
 
 /* Buttons */
 .btn-primary {
-  background: #FFFFFF;
-  color: #0B0B0B;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  color: #041016;
   padding: 12px 32px;
   border-radius: 999px;
   font-weight: 600;
@@ -130,11 +145,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  box-shadow: 0 18px 50px rgba(34, 211, 238, 0.18);
 }
 
 .btn-primary:hover {
-  transform: scale(1.02);
-  opacity: 0.95;
+  transform: translateY(-1px) scale(1.02);
+  filter: brightness(1.02);
 }
 
 .btn-primary:active {
@@ -189,8 +205,21 @@ body {
   pointer-events: none;
   z-index: -1;
   background:
-    radial-gradient(ellipse 50% 50% at 50% 0%, rgba(232, 93, 79, 0.03), transparent),
+    radial-gradient(ellipse 50% 50% at 50% 0%, rgba(34, 211, 238, 0.04), transparent),
     var(--bg-primary);
+}
+
+/* Wise-inspired background micro-animations */
+@keyframes cc-star-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.55); }
+}
+
+.cc-star {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cc-star-pulse 3.4s ease-in-out infinite;
+  will-change: transform;
 }
 
 /* Animation keyframes */
@@ -237,6 +266,6 @@ body {
 
 /* Selection */
 ::selection {
-  background: rgba(232, 93, 79, 0.3);
+  background: rgba(34, 211, 238, 0.25);
   color: var(--text-primary);
 }
