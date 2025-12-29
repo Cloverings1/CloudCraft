@@ -169,6 +169,11 @@ export interface CreateServerOptions {
   disk: number;          // MB
 }
 
+// Paper 1.21.1 - pinned version for fast deployment (no API lookup needed)
+const PAPER_VERSION = '1.21.1';
+const PAPER_BUILD = '133';
+const PAPER_JAR_URL = `https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar`;
+
 // Wait for server installation to complete and accept EULA
 export async function waitForInstallAndAcceptEula(serverIdentifier: string, maxWaitSeconds = 60): Promise<void> {
   const adminClient = createAdminPterodactylClient();
@@ -189,7 +194,7 @@ export async function waitForInstallAndAcceptEula(serverIdentifier: string, maxW
   console.warn(`Could not auto-accept EULA for ${serverIdentifier} within ${maxWaitSeconds}s`);
 }
 
-// Create a new server via Application API
+// Create a new server via Application API (optimized for fast deployment)
 export async function createPterodactylServer(options: CreateServerOptions) {
   const adminKey = process.env.PTERODACTYL_ADMIN_KEY;
   if (!adminKey) throw new Error('Admin API key not configured');
@@ -214,8 +219,11 @@ export async function createPterodactylServer(options: CreateServerOptions) {
       startup: 'java -Xms128M -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}',
       environment: {
         SERVER_JARFILE: 'server.jar',
-        MINECRAFT_VERSION: 'latest',
-        BUILD_NUMBER: 'latest',
+        // Pinned Paper version - skips version lookup API calls
+        MINECRAFT_VERSION: PAPER_VERSION,
+        BUILD_NUMBER: PAPER_BUILD,
+        // Direct download URL - fastest possible JAR fetch
+        DL_PATH: PAPER_JAR_URL,
       },
       limits: {
         memory: options.memory,
@@ -234,7 +242,8 @@ export async function createPterodactylServer(options: CreateServerOptions) {
         dedicated_ip: false,
         port_range: [],
       },
-      start_on_completion: true,
+      // Don't auto-start - we'll upload EULA first then start manually
+      start_on_completion: false,
     }),
   });
 
@@ -244,6 +253,34 @@ export async function createPterodactylServer(options: CreateServerOptions) {
   }
 
   return response.json();
+}
+
+// Fast server setup: upload EULA and start server immediately after install
+export async function setupAndStartServer(serverIdentifier: string, maxWaitSeconds = 120): Promise<void> {
+  const client = createAdminPterodactylClient();
+  const startTime = Date.now();
+
+  // Wait for installation to complete (JAR download)
+  while (Date.now() - startTime < maxWaitSeconds * 1000) {
+    try {
+      // Try to write EULA - fails if server still installing
+      await client.writeFile(serverIdentifier, '/eula.txt', 'eula=true');
+      console.log(`EULA written for server ${serverIdentifier}`);
+
+      // Small delay to ensure file is synced
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Start the server
+      await client.sendPowerAction(serverIdentifier, 'start');
+      console.log(`Server ${serverIdentifier} started`);
+      return;
+    } catch (err) {
+      // Server still installing, wait and retry
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
+
+  console.warn(`Server setup timed out for ${serverIdentifier} after ${maxWaitSeconds}s`);
 }
 
 // Suspend a server via Application API

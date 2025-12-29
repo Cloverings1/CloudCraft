@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { hashPassword, createSession } from '@/lib/auth';
-import { createPterodactylUser, createPterodactylServer, waitForInstallAndAcceptEula } from '@/lib/pterodactyl';
+import { createPterodactylUser, createPterodactylServer, setupAndStartServer } from '@/lib/pterodactyl';
 
 // Demo server specs (maxed out for single demo on 4-core/8GB node)
 const DEMO_SPECS = {
@@ -99,9 +99,10 @@ export async function POST(request: NextRequest) {
           },
         });
 
-        // Fire-and-forget: Accept EULA in background so server can start
-        waitForInstallAndAcceptEula(pteroServer.attributes.identifier).catch(err => {
-          console.error('Background EULA acceptance failed:', err);
+        // Fire-and-forget: Setup EULA and start server in background
+        // User is redirected immediately while this runs async
+        setupAndStartServer(pteroServer.attributes.identifier).catch(err => {
+          console.error('Background server setup failed:', err);
         });
       } catch (err) {
         console.error('Failed to create demo server:', err);
