@@ -111,7 +111,7 @@ export function ServerOverview({ serverId }: ServerOverviewProps) {
 
     const interval = setInterval(() => {
       fetchData(abortControllerRef.current?.signal);
-    }, isSettingUp ? 2000 : 3000); // Faster polling: 3s instead of 5s
+    }, isSettingUp ? 1000 : 3000); // Ultra-fast 1s polling during setup
 
     return () => {
       clearInterval(interval);
@@ -177,8 +177,11 @@ export function ServerOverview({ serverId }: ServerOverviewProps) {
     return `${Math.floor(seconds / 86400)}d ${Math.floor((seconds % 86400) / 3600)}h`;
   }, []);
 
-  // Computed values
-  const currentState = (optimisticState || resources?.current_state || 'offline') as ServerState;
+  // Computed values - show "starting" during initial setup phase if server is offline
+  // This prevents showing "Offline" during the brief gap between install and start
+  const rawState = resources?.current_state || 'offline';
+  const isNewlyCreated = retryCountRef.current < 15 && rawState === 'offline';
+  const currentState = (optimisticState || (isNewlyCreated ? 'starting' : rawState)) as ServerState;
   const isOnline = currentState === 'running';
   const isTransitioning = currentState === 'starting' || currentState === 'stopping';
 

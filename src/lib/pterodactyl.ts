@@ -169,9 +169,9 @@ export interface CreateServerOptions {
   disk: number;          // MB
 }
 
-// Paper 1.21.1 - pinned version for fast deployment (no API lookup needed)
-const PAPER_VERSION = '1.21.1';
-const PAPER_BUILD = '133';
+// Paper 1.21.11 - pinned version for fast deployment (no API lookup needed)
+const PAPER_VERSION = '1.21.11';
+const PAPER_BUILD = '65';
 const PAPER_JAR_URL = `https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar`;
 
 // Wait for server installation to complete and accept EULA
@@ -260,23 +260,20 @@ export async function setupAndStartServer(serverIdentifier: string, maxWaitSecon
   const client = createAdminPterodactylClient();
   const startTime = Date.now();
 
-  // Wait for installation to complete (JAR download)
+  // Aggressive polling - check every 500ms for fastest possible startup
   while (Date.now() - startTime < maxWaitSeconds * 1000) {
     try {
       // Try to write EULA - fails if server still installing
       await client.writeFile(serverIdentifier, '/eula.txt', 'eula=true');
       console.log(`EULA written for server ${serverIdentifier}`);
 
-      // Small delay to ensure file is synced
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Start the server
+      // Start immediately - no delay needed
       await client.sendPowerAction(serverIdentifier, 'start');
       console.log(`Server ${serverIdentifier} started`);
       return;
     } catch (err) {
-      // Server still installing, wait and retry
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Server still installing, poll aggressively
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
   }
 
