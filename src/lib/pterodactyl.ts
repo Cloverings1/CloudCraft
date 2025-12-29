@@ -255,6 +255,79 @@ export async function createPterodactylServer(options: CreateServerOptions) {
   return response.json();
 }
 
+// Admin email for sub-user access to all servers
+const ADMIN_EMAIL = 'admin@minecraft.host';
+
+// Add admin as sub-user to server for IT support access
+export async function addAdminSubUser(serverIdentifier: string): Promise<void> {
+  const clientKey = process.env.PTERODACTYL_CLIENT_KEY;
+  if (!clientKey) throw new Error('Client API key not configured');
+
+  try {
+    const response = await fetch(`${PANEL_URL}/api/client/servers/${serverIdentifier}/users`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${clientKey}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        email: ADMIN_EMAIL,
+        permissions: [
+          // Full access for IT support
+          'control.console',
+          'control.start',
+          'control.stop',
+          'control.restart',
+          'user.create',
+          'user.read',
+          'user.update',
+          'user.delete',
+          'file.create',
+          'file.read',
+          'file.read-content',
+          'file.update',
+          'file.delete',
+          'file.archive',
+          'file.sftp',
+          'backup.create',
+          'backup.read',
+          'backup.delete',
+          'backup.download',
+          'backup.restore',
+          'allocation.read',
+          'startup.read',
+          'startup.update',
+          'database.create',
+          'database.read',
+          'database.update',
+          'database.delete',
+          'database.view_password',
+          'schedule.create',
+          'schedule.read',
+          'schedule.update',
+          'schedule.delete',
+          'settings.rename',
+          'settings.reinstall',
+          'websocket.connect',
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      // Ignore "already exists" errors
+      if (!error.includes('already assigned')) {
+        console.warn(`Failed to add admin sub-user: ${error}`);
+      }
+    } else {
+      console.log(`Admin added as sub-user to server ${serverIdentifier}`);
+    }
+  } catch (err) {
+    console.warn('Failed to add admin sub-user:', err);
+  }
+}
+
 // Fast server setup: upload EULA and start server immediately after install
 export async function setupAndStartServer(serverIdentifier: string, maxWaitSeconds = 120): Promise<void> {
   const client = createAdminPterodactylClient();
@@ -266,6 +339,9 @@ export async function setupAndStartServer(serverIdentifier: string, maxWaitSecon
       // Try to write EULA - fails if server still installing
       await client.writeFile(serverIdentifier, '/eula.txt', 'eula=true');
       console.log(`EULA written for server ${serverIdentifier}`);
+
+      // Add admin as sub-user for IT support access
+      await addAdminSubUser(serverIdentifier);
 
       // Start immediately - no delay needed
       await client.sendPowerAction(serverIdentifier, 'start');
