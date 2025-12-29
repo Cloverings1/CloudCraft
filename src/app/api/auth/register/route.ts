@@ -3,11 +3,11 @@ import { db } from '@/lib/db';
 import { hashPassword, createSession } from '@/lib/auth';
 import { createPterodactylUser, createPterodactylServer, waitForInstallAndAcceptEula } from '@/lib/pterodactyl';
 
-// Demo server specs (reduced to fit more demos on node)
+// Demo server specs (maxed out for single demo on 4-core/8GB node)
 const DEMO_SPECS = {
-  memory: 2048,   // 2GB RAM (enough for demo)
-  cpu: 100,       // 1 vCPU (Pterodactyl percentage)
-  disk: 5120,     // 5GB disk
+  memory: 6144,   // 6GB RAM
+  cpu: 300,       // 3 vCPUs (Pterodactyl percentage)
+  disk: 20480,    // 20GB disk
 };
 
 export async function POST(request: NextRequest) {

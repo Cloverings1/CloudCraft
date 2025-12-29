@@ -70,7 +70,7 @@ export default function TryDemoPage() {
             <p className="text-[14px] text-[var(--text-secondary)]">
               Get a fully functional Minecraft server instantly.
               <br />
-              <span className="text-[var(--text-muted)]">2GB RAM, 1 vCPU - No credit card required.</span>
+              <span className="text-[var(--text-muted)]">6GB RAM, 3 vCPUs - No credit card required.</span>
             </p>
           </div>
 
@@ -143,19 +143,19 @@ export default function TryDemoPage() {
                 <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                2GB RAM
+                6GB RAM
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                1 vCPU
+                3 vCPUs
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                5GB Storage
+                20GB Storage
               </div>
               <div className="flex items-center gap-2">
                 <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

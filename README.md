@@ -102,9 +102,9 @@ cloudcraft/
 
 | Resource | Allocation |
 |----------|------------|
-| RAM | 2 GB |
-| CPU | 1 vCPU |
-| Storage | 5 GB |
+| RAM | 6 GB |
+| CPU | 3 vCPUs |
+| Storage | 20 GB |
 | Duration | 24 hours |
 
 ## API Endpoints

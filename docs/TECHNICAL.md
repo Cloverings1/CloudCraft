@@ -300,7 +300,7 @@ This document provides a comprehensive overview of the CloudCraft platform archi
          ▼
 ┌─────────────────┐     ┌─────────────────┐
 │  Create demo    │────>│  No resources?  │───> User created,
-│  server (2GB)   │     │                 │     no server
+│  server (6GB)   │     │                 │     no server
 └────────┬────────┘     └─────────────────┘
          │ Success
          ▼
@@ -395,11 +395,11 @@ PTERODACTYL_DEFAULT_LOCATION=1
 
 | Resource | Demo Server | Pro Server | Elite Server |
 |----------|-------------|------------|--------------|
-| RAM | 2 GB | 4 GB | 8 GB |
-| CPU | 1 vCPU | 2 vCPU | 4 vCPU |
-| Storage | 5 GB | 20 GB | 50 GB |
+| RAM | 6 GB | 6 GB | 12 GB |
+| CPU | 3 vCPUs | 3 vCPUs | 4 vCPUs |
+| Storage | 20 GB | 35 GB | 60 GB |
 | Duration | 24 hours | Unlimited | Unlimited |
-| Backups | 1 | 3 | 7 |
+| Backups | 1 | 7 | 14 |
 
 ---
 
@@ -520,11 +520,11 @@ Returns WebSocket credentials for real-time console access.
     BUILD_NUMBER: "latest"
   },
   limits: {
-    memory: 2048,             // 2 GB
+    memory: 6144,             // 6 GB
     swap: 0,
-    disk: 5120,               // 5 GB
+    disk: 20480,              // 20 GB
     io: 500,
-    cpu: 100                  // 1 vCPU
+    cpu: 300                  // 3 vCPUs
   },
   feature_limits: {
     databases: 0,
