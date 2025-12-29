@@ -1,6 +1,4 @@
 import Link from "next/link";
-import WiseInspiredBackground from "@/components/marketing/WiseInspiredBackground";
-import MarketingHeader from "@/components/marketing/MarketingHeader";
 
 // Icons with thinner strokes for minimal aesthetic
 const ShieldIcon = () => (
@@ -42,17 +40,6 @@ const ChartIcon = () => (
 const ArrowIcon = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-  </svg>
-);
-
-const StarIcon = ({ className }: { className?: string }) => (
-  <svg
-    className={className ?? "w-4 h-4"}
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    aria-hidden="true"
-  >
-    <path d="M11.48 3.499a.6.6 0 011.04 0l2.744 5.56 6.137.892a.6.6 0 01.332 1.024l-4.44 4.328 1.048 6.112a.6.6 0 01-.87.632L12 19.862l-5.49 2.885a.6.6 0 01-.87-.632l1.048-6.112-4.44-4.328a.6.6 0 01.332-1.024l6.137-.892 2.744-5.56z" />
   </svg>
 );
 
@@ -99,119 +86,76 @@ const stats = [
 export default function Home() {
   return (
     <div className="relative min-h-screen">
-      <WiseInspiredBackground />
+      {/* Subtle gradient overlay */}
+      <div className="gradient-overlay" />
 
-      <MarketingHeader />
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--white-6)]" style={{ background: 'rgba(11, 11, 11, 0.8)', backdropFilter: 'blur(20px)' }}>
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] flex items-center justify-center">
+              <div className="w-3 h-3 bg-white/90 rounded-sm" />
+            </div>
+            <span className="text-[17px] font-semibold tracking-tight">
+              CloudCraft
+            </span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8">
+            <Link href="#features" className="text-[14px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200">Features</Link>
+            <Link href="/pricing" className="text-[14px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200">Pricing</Link>
+            <Link href="#" className="text-[14px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200">Docs</Link>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="hidden sm:block text-[14px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200">
+              Sign In
+            </Link>
+            <Link href="/try-demo" className="btn-primary text-[14px] py-2.5 px-5">
+              Try Demo
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <section className="pt-44 pb-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-12 gap-10 items-start">
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[var(--white-6)] border border-[var(--white-8)] mb-8 backdrop-blur-sm animate-fade-up">
-                <span className="text-[14px] font-medium text-[var(--text-primary)]">Excellent</span>
-                <div className="flex items-center gap-1 text-[var(--accent)]">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <StarIcon key={i} className="w-4 h-4" />
-                  ))}
-                </div>
-                <span className="hidden sm:inline text-[13px] text-[var(--text-muted)]">4.9 · loved by builders</span>
-              </div>
+      <section className="pt-36 pb-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Label badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--white-6)] border border-[var(--white-8)] mb-10 animate-fade-up">
+            <span className="w-1.5 h-1.5 bg-[var(--accent)] rounded-full" />
+            <span className="text-label text-[var(--text-secondary)]">Now with global edge locations</span>
+          </div>
 
-              <h1 className="text-[clamp(44px,5.6vw,76px)] leading-[0.92] font-semibold tracking-[-0.045em] mb-6 animate-fade-up delay-1">
-                <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)] bg-clip-text text-transparent">
-                  Minecraft
-                </span>{" "}
-                server hosting
-                <br />
-                made effortless.
-              </h1>
+          {/* Main headline */}
+          <h1 className="text-display text-[clamp(32px,6vw,48px)] mb-6 animate-fade-up delay-1">
+            Premium Minecraft Hosting.
+            <br />
+            <span className="text-[var(--text-secondary)]">In One Click.</span>
+          </h1>
 
-              <p className="text-body text-[var(--text-secondary)] max-w-xl mb-10 animate-fade-up delay-2">
-                Deploy in seconds, install modpacks in one click, and manage everything from a clean panel—built for performance
-                and calm.
-              </p>
+          {/* Subheadline */}
+          <p className="text-body text-[var(--text-secondary)] max-w-xl mx-auto mb-10 animate-fade-up delay-2">
+            Instant deployment, enterprise protection,
+            global infrastructure. Launch your server in seconds.
+          </p>
 
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-10 animate-fade-up delay-3">
-                <Link href="/pricing" className="btn-primary flex items-center gap-2 w-full sm:w-auto">
-                  Create Server
-                  <ArrowIcon />
-                </Link>
-                <Link href="/try-demo" className="btn-secondary flex items-center gap-2 w-full sm:w-auto">
-                  Try Demo
-                  <span className="text-[10px] bg-[var(--accent)]/15 text-[var(--accent)] px-2 py-0.5 rounded-full">Free</span>
-                </Link>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-x-10 gap-y-4 text-[14px] text-[var(--text-muted)] animate-fade-up delay-4">
-                {[
-                  "Java & Bedrock Editions",
-                  "1-Click Modpacks",
-                  "24/7 Real Support",
-                ].map((item) => (
-                  <span key={item} className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[var(--accent)]/70" />
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 animate-fade-up delay-4">
-              <div className="relative rounded-3xl p-[1px] bg-gradient-to-b from-white/20 via-white/10 to-white/5">
-                <div className="rounded-3xl glass-card-elevated p-7 shadow-[0_28px_90px_rgba(0,0,0,0.55)]">
-                  <div className="flex items-start justify-between mb-6">
-                    <div>
-                      <div className="text-label text-[var(--text-muted)] mb-2">Featured Plan</div>
-                      <div className="text-[20px] font-semibold tracking-tight text-[var(--text-primary)]">Pro</div>
-                      <div className="text-[14px] text-[var(--text-secondary)]">For growing communities</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[34px] font-semibold leading-none text-[var(--text-primary)]">
-                        $18.99
-                      </div>
-                      <div className="text-[13px] text-[var(--text-muted)]">/ month</div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3 mb-6">
-                    {[
-                      { label: "RAM", value: "6 GB" },
-                      { label: "CPU", value: "3 Cores" },
-                      { label: "Storage", value: "35 GB" },
-                    ].map((spec) => (
-                      <div
-                        key={spec.label}
-                        className="rounded-2xl bg-[var(--white-6)] border border-[var(--white-8)] px-4 py-3"
-                      >
-                        <div className="text-[11px] text-[var(--text-muted)] tracking-wider uppercase mb-1">
-                          {spec.label}
-                        </div>
-                        <div className="text-[15px] font-medium text-[var(--text-primary)]">{spec.value}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between gap-4">
-                    <Link
-                      href="/pricing"
-                      className="text-[14px] text-[var(--accent)] font-medium hover:opacity-85 transition-opacity"
-                    >
-                      View all plans
-                    </Link>
-                    <Link href="/pricing" className="btn-primary text-[14px] py-2.5 px-5">
-                      Choose Pro
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-fade-up delay-3">
+            <Link href="/try-demo" className="btn-primary flex items-center gap-2">
+              Try Demo Server
+              <ArrowIcon />
+            </Link>
+            <Link href="/pricing" className="btn-secondary flex items-center gap-2">
+              View Pricing
+              <span className="text-[10px] bg-[var(--accent)]/20 text-[var(--accent)] px-2 py-0.5 rounded-full">Free Trial</span>
+            </Link>
           </div>
 
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto animate-fade-up delay-4">
             {stats.map((stat, i) => (
-              <div key={i}>
+              <div key={i} className="text-center">
                 <div className="text-heading text-[var(--text-primary)] mb-1">
                   {stat.value}
                 </div>

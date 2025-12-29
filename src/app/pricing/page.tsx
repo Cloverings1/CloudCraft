@@ -1,6 +1,4 @@
 import Link from "next/link";
-import WiseInspiredBackground from "@/components/marketing/WiseInspiredBackground";
-import MarketingHeader from "@/components/marketing/MarketingHeader";
 
 const CheckIcon = () => (
   <svg className="w-4 h-4 text-[var(--accent)] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -115,11 +113,40 @@ const faqs = [
 export default function PricingPage() {
   return (
     <div className="relative min-h-screen">
-      <WiseInspiredBackground />
-      <MarketingHeader />
+      {/* Subtle gradient overlay */}
+      <div className="gradient-overlay" />
+
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--white-6)]" style={{ background: 'rgba(11, 11, 11, 0.8)', backdropFilter: 'blur(20px)' }}>
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] flex items-center justify-center">
+              <div className="w-3 h-3 bg-white/90 rounded-sm" />
+            </div>
+            <span className="text-[17px] font-semibold tracking-tight">
+              CloudCraft
+            </span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8">
+            <Link href="/#features" className="text-[14px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200">Features</Link>
+            <Link href="/pricing" className="text-[14px] text-[var(--text-primary)]">Pricing</Link>
+            <Link href="#" className="text-[14px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200">Docs</Link>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Link href="#" className="hidden sm:block text-[14px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200">
+              Sign In
+            </Link>
+            <Link href="#plans" className="btn-primary text-[14px] py-2.5 px-5">
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <section className="pt-44 pb-16 px-6 text-center">
+      <section className="pt-36 pb-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--white-6)] border border-[var(--white-8)] mb-8 animate-fade-up">
             <span className="w-1.5 h-1.5 bg-[var(--accent)] rounded-full" />
