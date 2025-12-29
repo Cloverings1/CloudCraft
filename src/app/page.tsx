@@ -131,7 +131,7 @@ export default function Home() {
           <h1 className="text-display text-[clamp(32px,6vw,48px)] mb-6 animate-fade-up delay-1">
             Premium Minecraft Hosting.
             <br />
-            <span className="text-[var(--text-secondary)]">Zero Complexity.</span>
+            <span className="text-[var(--text-secondary)]">In One Click.</span>
           </h1>
 
           {/* Subheadline */}
