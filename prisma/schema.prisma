@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String?
+
+  // Pterodactyl linking
+  pterodactylUserId  Int?
+  pterodactylApiKey  String?
+
+  // Relations
+  sessions      Session[]
+  server        Server?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Server {
+  id                    String   @id @default(cuid())
+
+  // Pterodactyl identifiers
+  pterodactylServerId   String   @unique
+  pterodactylIdentifier String   // Short ID like "d3aac109"
+
+  // Server info
+  name                  String
+  planType              String   // starter, pro, elite, demo
+
+  // Demo-specific fields
+  isDemo                Boolean  @default(false)
+  demoExpiresAt         DateTime?
+
+  // User relation (one server per user)
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}

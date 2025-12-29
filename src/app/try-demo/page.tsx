@@ -1,0 +1,185 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+export default function TryDemoPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, isDemo: true }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'Failed to create demo server');
+        return;
+      }
+
+      // Redirect to panel with new server
+      if (data.serverId) {
+        router.push(`/panel/server/${data.serverId}`);
+      } else {
+        router.push('/panel');
+      }
+    } catch {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="gradient-overlay" />
+
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
+          <div className="w-10 h-10 rounded-xl bg-[var(--accent)] flex items-center justify-center">
+            <div className="w-4 h-4 bg-white/90 rounded-sm" />
+          </div>
+          <span className="text-[20px] font-semibold tracking-tight">CloudCraft</span>
+        </Link>
+
+        <div className="glass-card-elevated p-8">
+          <div className="text-center mb-8">
+            {/* Demo badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/30 mb-4">
+              <svg className="w-4 h-4 text-[var(--accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-[12px] font-medium text-[var(--accent)]">24-Hour Free Trial</span>
+            </div>
+
+            <h1 className="text-heading mb-2">Try Demo Server</h1>
+            <p className="text-[14px] text-[var(--text-secondary)]">
+              Get a fully functional Minecraft server instantly.
+              <br />
+              <span className="text-[var(--text-muted)]">4GB RAM, 2 vCPUs - No credit card required.</span>
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5" suppressHydrationWarning>
+            {error && (
+              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px]">
+                {error}
+              </div>
+            )}
+
+            <div>
+              <label className="text-label text-[var(--text-muted)] block mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                suppressHydrationWarning
+                className="w-full px-4 py-3 rounded-xl bg-[var(--white-6)] border border-[var(--white-8)] text-[var(--text-primary)] text-[15px] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div>
+              <label className="text-label text-[var(--text-muted)] block mb-2">
+                Create Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
+                suppressHydrationWarning
+                className="w-full px-4 py-3 rounded-xl bg-[var(--white-6)] border border-[var(--white-8)] text-[var(--text-primary)] text-[15px] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
+                placeholder="At least 8 characters"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn-primary w-full py-3.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Creating Your Server...
+                </>
+              ) : (
+                <>
+                  Start Demo Server
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Demo features */}
+          <div className="mt-6 pt-6 border-t border-[var(--white-6)]">
+            <div className="grid grid-cols-2 gap-3 text-[12px] text-[var(--text-muted)]">
+              <div className="flex items-center gap-2">
+                <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                4GB RAM
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                2 vCPUs
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                10GB Storage
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Full Console
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link
+              href="/login"
+              className="text-[13px] text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors"
+            >
+              Already have an account? Sign in
+            </Link>
+          </div>
+        </div>
+
+        <p className="text-center mt-8 text-[12px] text-[var(--text-muted)]">
+          Demo servers expire after 24 hours. Upgrade anytime to keep your data.
+        </p>
+      </div>
+    </div>
+  );
+}
